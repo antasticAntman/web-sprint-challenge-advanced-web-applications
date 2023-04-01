@@ -6,7 +6,7 @@ const initialFormValues = { title: '', text: '', topic: '' }
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
   // ✨ where are my props? Destructure them here
-
+  const { postArticle } = props
   useEffect(() => {
     // ✨ implement
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
@@ -18,12 +18,13 @@ export default function ArticleForm(props) {
     const { id, value } = evt.target
     setValues({ ...values, [id]: value })
   }
-
   const onSubmit = evt => {
     evt.preventDefault()
     // ✨ implement
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
+    postArticle({'title':values.title, 'text':values.text, 'topic':values.topic})
+    setValues(initialFormValues);
   }
 
   const isDisabled = () => {
