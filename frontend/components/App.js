@@ -15,9 +15,11 @@ export default function App() {
   // ✨ MVP can be achieved with these states
   const [message, setMessage] = useState('')
   const [articles, setArticles] = useState([])
-  const [currentArticleId, setCurrentArticleId] = useState(0)
+  const [currentArticleId, setCurrentArticleId] = useState(null)
   const [spinnerOn, setSpinnerOn] = useState(false)
   
+  console.log(currentArticleId)
+
   const token = localStorage.getItem('token')
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
@@ -79,7 +81,6 @@ export default function App() {
     setMessage('')
     setSpinnerOn(true)
 
-      console.log(token)
     axios.get('http://localhost:9000/api/articles', {
       headers: {
         authorization: token
@@ -117,16 +118,50 @@ export default function App() {
     })
     .catch(err => {
       console.error(err)
+      setSpinnerOn(false)
     })
   }
 
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
+    setMessage('')
+    setSpinnerOn(true)
+    axios.put(`http://localhost:9000/api/articles/${article_id}`, article, {
+      headers: {
+        authorization: token
+      }
+    })
+    .then(res => {
+      console.log(res)
+      setMessage(res.data.message),
+      setArticles([...articles, res.data.article])
+      setSpinnerOn(false)
+    })
+    .catch(err => {
+      console.err(err)
+      setSpinnerOn(false)
+    })
   }
 
   const deleteArticle = article_id => {
-    // ✨ implement
+    setMessage('')
+    setSpinnerOn(true)
+    axios.delete(`http://localhost:9000/api/articles/${article_id}`,{
+      headers: {
+        authorization: token
+      }
+    })
+    .then(res => {
+      console.log('res', res)
+      setMessage(res.data.message),
+      setArticles([...articles])
+      setSpinnerOn(false)
+    })
+    .catch(err => {
+      console.error(err)
+      setSpinnerOn(false)
+    })
   }
 
   return (
@@ -145,8 +180,8 @@ export default function App() {
           <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="articles" element={
             <>
-              <ArticleForm postArticle={postArticle} setCurrentArticleId={setCurrentArticleId}/>
-              <Articles getArticles={getArticles} articles={articles} setCurrentArticleId={setCurrentArticleId}/>
+              <ArticleForm postArticle={postArticle} setCurrentArticleId={setCurrentArticleId}  updateArticle={updateArticle} currentArticleId={currentArticleId} articles={articles}/>
+              <Articles getArticles={getArticles} articles={articles} setCurrentArticleId={setCurrentArticleId} currentArticleId={currentArticleId} deleteArticle={deleteArticle}/>
             </>
           } />
         </Routes>
