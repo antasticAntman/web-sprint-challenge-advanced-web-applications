@@ -19,6 +19,7 @@ export default function App() {
   const [spinnerOn, setSpinnerOn] = useState(false)
   
   console.log(currentArticleId)
+  console.log('article', articles)
 
   const token = localStorage.getItem('token')
   // ✨ Research `useNavigate` in React Router v.6
@@ -133,9 +134,10 @@ export default function App() {
       }
     })
     .then(res => {
+      const del = articles.filter(article => (article.article_id !== article_id))
       console.log(res)
       setMessage(res.data.message),
-      setArticles([...articles, res.data.article])
+      setArticles([...del, res.data.article])
       setSpinnerOn(false)
     })
     .catch(err => {
@@ -153,9 +155,10 @@ export default function App() {
       }
     })
     .then(res => {
-      console.log('res', res)
+      const del = articles.filter(article => (article.article_id !== article_id))
+      console.log('res', res,'del', del, 'articles', articles)
       setMessage(res.data.message),
-      setArticles([...articles])
+      setArticles(del),
       setSpinnerOn(false)
     })
     .catch(err => {

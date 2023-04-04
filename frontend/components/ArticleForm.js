@@ -5,11 +5,10 @@ const initialFormValues = { title: '', text: '', topic: '' }
 
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
+  const [integer, setInteger]=useState(2)
   // ✨ where are my props? Destructure them here
   const { postArticle, currentArticleId, setCurrentArticleId, updateArticle, articles } = props
-  console.log('val', values.text)
-  console.log(props)
-  console.log(values)
+
   useEffect(() => {
     // ✨ implement
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
@@ -20,7 +19,7 @@ export default function ArticleForm(props) {
   // setValues({title: articles[currentArticle].title, text: articles[currentArticle].text, topic: articles[currentArticle].topic}
   const onChange = evt => {
     const { id, value } = evt.target
-    setValues({ ...values, [id]: value.trim()})
+    setValues({ ...values, [id]: value})
   }
   const onSubmit = evt => {
     evt.preventDefault()
