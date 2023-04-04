@@ -18,7 +18,7 @@ export default function App() {
   const [currentArticleId, setCurrentArticleId] = useState(null)
   const [spinnerOn, setSpinnerOn] = useState(false)
   
-  console.log(currentArticleId)
+  console.log('currentArticleId',currentArticleId)
   console.log('article', articles)
 
   const token = localStorage.getItem('token')
@@ -134,10 +134,11 @@ export default function App() {
       }
     })
     .then(res => {
-      const del = articles.filter(article => (article.article_id !== article_id))
+      // const del = articles.filter(article => (article.article_id !== article_id))
+      const rep = articles.map(article => article.article_id === res.data.article.article_id ? res.data.article: article)
       console.log(res)
       setMessage(res.data.message),
-      setArticles([...del, res.data.article])
+      setArticles(rep)
       setSpinnerOn(false)
     })
     .catch(err => {

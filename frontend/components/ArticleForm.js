@@ -5,16 +5,18 @@ const initialFormValues = { title: '', text: '', topic: '' }
 
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
-  const [integer, setInteger]=useState(2)
   // ✨ where are my props? Destructure them here
   const { postArticle, currentArticleId, setCurrentArticleId, updateArticle, articles } = props
 
   useEffect(() => {
+    const currentArticle = articles.find(article => article.article_id === currentArticleId)
+    console.log('currentArticle',currentArticle)
+    // console.log('topic',currentArticle.topic)
     // ✨ implement
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
     // if it's truthy, we should set its title, text and topic into the corresponding
     // values of the form. If it's not, we should reset the form back to initial values.
-    currentArticleId === null ? setValues(initialFormValues): setValues({title: articles[currentArticleId].title, text: articles[currentArticleId].text, topic:articles[currentArticleId].topic})
+    currentArticleId === null ? setValues(initialFormValues): setValues({title: currentArticle.title, text: currentArticle.text, topic: currentArticle.topic})
   },[currentArticleId])
   // setValues({title: articles[currentArticle].title, text: articles[currentArticle].text, topic: articles[currentArticle].topic}
   const onChange = evt => {
@@ -27,7 +29,7 @@ export default function ArticleForm(props) {
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
     currentArticleId === null ? postArticle({'title':values.title, 'text':values.text, 'topic':values.topic}) :
-    updateArticle({article_id:currentArticleId+1, article: {'title':values.title, 'text':values.text, 'topic':values.topic}}),
+    updateArticle({article_id:currentArticleId, article: {'title':values.title, 'text':values.text, 'topic':values.topic}}),
     setValues(initialFormValues),
     setCurrentArticleId(null)
   }
